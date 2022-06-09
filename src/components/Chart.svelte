@@ -1,13 +1,12 @@
 <script lang="ts">
-  import { select, scaleLinear, extent, axisBottom, axisLeft } from 'd3';
-  import Point from '../components/Points.svelte';
+  import { select, scaleLinear, extent, axisBottom, axisLeft, quadtree } from 'd3';
 
   export let data: any,
     xValue: (any) => number,
     yValue: (any) => number,
     margin: { top: number; right: number; left: number; bottom: number };
   const nTicksY = 5;
-  let width, height, xAxisNode, yAxisNode;
+  let width, height, xAxisNode, yAxisNode, found;
 
   $: innerSize = {
     width: width - margin.left - margin.right,
@@ -26,16 +25,23 @@
   $: yAxis = axisLeft(y).ticks(nTicksY);
   $: select(yAxisNode).call(yAxis).selectAll('text').attr('class', 'tick-labels');
 
-  $: coords = data.map((row) => ({
-    x: x(xValue(row)),
-    y: y(yValue(row))
-  }));
+  $: coords = data.map((row) => [x(xValue(row)), y(yValue(row))]);
 
-  $: console.log(yAxis);
+  $: finder = quadtree()
+    .extent([
+      [-1, -1],
+      [width + 1, height + 1]
+    ])
+    .addAll(coords);
+
+  let mousepos;
+  function findItem(e: MouseEvent) {
+    found = finder.find(e['layerX'], e['layerY']);
+  }
 </script>
 
 <div bind:clientWidth={width} bind:clientHeight={height}>
-  <svg class="min-h-[300px] w-full bg-gray-300">
+  <svg class="min-h-[300px] w-full bg-gray-300" on:mousemove={findItem}>
     {#if width && height}
       <rect x={margin.left} y={margin.top} width={innerSize.width} height={innerSize.height} class="fill-white" />
       <g bind:this={xAxisNode} transform={`translate(0,${height - margin.bottom})`} />
@@ -46,9 +52,12 @@
       {#each y.ticks(nTicksY) as tick}
         <line transform={`translate(${margin.left},${y(tick)})`} x2={innerSize.width} class="grid-lines" />
       {/each}
-      {#each coords as { x, y }}
-        <Point cx={x} cy={y} />
+      {#each coords as [x, y]}
+        <circle cx={x} cy={y} r={10} class="fill-blue-800/50" />
       {/each}
+      {#if found}
+        <circle cx={found[0]} cy={found[1]} r={20} class="fill-red-800/50" />
+      {/if}
     {/if}
   </svg>
 </div>
