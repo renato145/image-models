@@ -1,5 +1,6 @@
 <script lang="ts">
   import { csv } from 'd3';
+  import Scatter from '../components/Chart.svelte';
   import type { TData } from '../types';
 
   async function getData() {
@@ -17,7 +18,6 @@
           cropt_pct: +row.cropt_pct
         } as TData)
     );
-    console.log(data[0]);
     return data;
   }
 
@@ -27,11 +27,11 @@
 <div class="container mx-auto mt-4 rounded-lg bg-slate-50 p-8 ">
   <h1>Image models</h1>
 
-  {#await data}
-    <p>...waiting</p>
-  {:then data}
-    {#each data as row}
-      <p>{row.model} - {row.top1} - {row.top5}</p>
-    {/each}
-  {/await}
+  <div class="mt-4">
+    {#await data}
+      <p>...loading data</p>
+    {:then data}
+      <Scatter {data} />
+    {/await}
+  </div>
 </div>
