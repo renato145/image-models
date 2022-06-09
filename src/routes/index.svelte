@@ -31,7 +31,17 @@
     {#await data}
       <p>...loading data</p>
     {:then data}
-      <Scatter {data} />
+      <Scatter
+        {data}
+        xValue={(row) => row.param_count}
+        yValue={(row) => row.top1}
+        margin={{
+          top: 20,
+          right: 20,
+          left: 50,
+          bottom: 50
+        }}
+      />
     {/await}
   </div>
 </div>
