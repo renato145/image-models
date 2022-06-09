@@ -1,2 +1,3 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<div class="container mx-auto  p-8 mt-4 rounded-xl bg-slate-50">
+  <h1>Image models</h1>
+</div>
