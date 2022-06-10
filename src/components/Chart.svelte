@@ -59,10 +59,12 @@
         <line transform={`translate(${margin.left},${y(tick)})`} x2={innerSize.width} class="grid-lines" />
       {/each}
       <!-- Labels -->
-      <text x={width / 2} y={15} alignment-baseline="hanging" class="chart-title">{title}</text>
-      <text x={margin.left + innerSize.width / 2} y={height - labelsOffset} class="ax-label">{xLabel}</text>
+      <text x={width / 2} y={15} dominant-baseline="hanging" class="chart-title">{title}</text>
+      <text x={margin.left + innerSize.width / 2} y={height - labelsOffset} class="ax-label"
+        >{xLabel}</text
+      >
       <g transform={`translate(${labelsOffset}, ${margin.top + innerSize.height / 2})`}>
-        <text transform="rotate(-90)" class="ax-label" alignment-baseline="hanging">{yLabel}</text>
+        <text transform="rotate(-90)" class="ax-label" dominant-baseline="hanging">{yLabel}</text>
       </g>
     {/if}
   </svg>
