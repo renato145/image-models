@@ -1,6 +1,7 @@
 <script lang="ts">
   import { select, scaleLinear, extent, axisBottom, axisLeft, quadtree } from 'd3';
   import ChartContainer from './ChartContainer.svelte';
+  import Highlight from './Highlight.svelte';
 
   export let data: any,
     xValue: (any) => number,
@@ -67,17 +68,17 @@
       <g transform={`translate(${labelsOffset}, ${margin.top + innerSize.height / 2})`}>
         <text transform="rotate(-90)" class="ax-label" alignment-baseline="hanging">{yLabel}</text>
       </g>
-
       <!-- Scatter -->
       {#each coords as [x, y]}
-        <circle cx={x} cy={y} r={pointsRadius} class="fill-blue-800/50" />
+        <circle cx={x} cy={y} r={pointsRadius} class="fill-blue-700/50" />
       {/each}
       <!-- <circle cx={mouseX} cy={mouseY} r={10} class="fill-emerald-800/75" /> -->
-      {#if found}
-        <circle cx={found[0]} cy={found[1]} r={pointHoverRadius} class="fill-red-800/50" />
-      {/if}
     {/if}
   </svg>
+  {#if found}
+    <Highlight x={found[0]} y={found[1]} radius={pointHoverRadius} pointClass="bg-blue-700" />
+  {/if}
+  <Highlight x={200} y={120} radius={pointHoverRadius} pointClass="bg-blue-700" />
 </ChartContainer>
 
 <style>

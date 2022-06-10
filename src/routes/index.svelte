@@ -44,6 +44,8 @@
         title="Image models"
         xLabel="Param count"
         yLabel="Top 1"
+        pointsRadius={5}
+        pointHoverRadius={8}
       />
     {/await}
   </div>
