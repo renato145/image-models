@@ -30,12 +30,13 @@
 </script>
 
 <div
-  class="absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-700"
+  class="absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-700 border-red-700"
   style:top={`${y}px`}
   style:left={`${x}px`}
   style:height={`${(highlight ? hoveredR : r) * 2}px`}
   style:width={`${(highlight ? hoveredR : r) * 2}px`}
   style:opacity={highlight ? 1 : 0.5}
+  style:border-width={locked ? "2px" : "0px"}
 />
 <div
   class="absolute -translate-x-1/2 -translate-y-1/2 rounded-full"
