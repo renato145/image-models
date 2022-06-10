@@ -36,6 +36,7 @@
 
   let mousepos;
   function findItem(e: MouseEvent) {
+    // check https://github.com/d3/d3-selection/blob/main/src/pointer.js
     found = finder.find(e['layerX'], e['layerY']);
   }
 </script>
