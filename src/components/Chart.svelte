@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { select, scaleLinear, extent, axisBottom, axisLeft, quadtree } from 'd3';
+  import { select, scaleLinear, extent, axisBottom, axisLeft } from 'd3';
   import ChartContainer from './ChartContainer.svelte';
-  import Highlight from './Highlight.svelte';
+  import Point from './Point.svelte';
 
   export let data: any,
     xValue: (any) => number,
@@ -34,22 +34,10 @@
   $: select(yAxisNode).call(yAxis).selectAll('text').attr('class', 'tick-labels');
 
   $: coords = data.map((row) => [x(xValue(row)), y(yValue(row))]);
-
-  $: finder = quadtree()
-    .extent([
-      [-1, -1],
-      [width + 1, height + 1]
-    ])
-    .addAll(coords);
-
-  let highlightPosition: [number, number] | undefined;
-  function findItem(x: number, y: number) {
-    highlightPosition = finder.find(x, y, pointHoverRadius);
-  }
 </script>
 
 <ChartContainer bind:width bind:height let:mouseX let:mouseY>
-  <svg class="min-h-[300px] w-full bg-gray-300" on:mousemove={() => findItem(mouseX, mouseY)}>
+  <svg class="min-h-[300px] w-full bg-gray-300">
     {#if width && height}
       <!-- Axes -->
       <rect x={margin.left} y={margin.top} width={innerSize.width} height={innerSize.height} class="fill-white" />
@@ -68,15 +56,12 @@
       <g transform={`translate(${labelsOffset}, ${margin.top + innerSize.height / 2})`}>
         <text transform="rotate(-90)" class="ax-label" alignment-baseline="hanging">{yLabel}</text>
       </g>
-      <!-- Scatter -->
-      {#each coords as [x, y]}
-        <circle cx={x} cy={y} r={pointsRadius} class="fill-blue-700/50" />
-      {/each}
-      <!-- <circle cx={mouseX} cy={mouseY} r={10} class="fill-emerald-800/75" /> -->
     {/if}
   </svg>
-  <Highlight position={highlightPosition} radius={pointHoverRadius} pointClass="bg-blue-700" />
-  <Highlight position={[200, 120]} radius={pointHoverRadius} pointClass="bg-blue-700" />
+  <!-- Scatter -->
+  {#each coords as [x, y]}
+    <Point {x} {y} r={pointsRadius} hoverR={pointHoverRadius} />
+  {/each}
 </ChartContainer>
 
 <style>
@@ -85,8 +70,8 @@
   }
 
   .grid-lines {
-    @apply stroke-black/20 stroke-2;
-    stroke-dasharray: 15 12;
+    @apply stroke-black/20 stroke-1;
+    stroke-dasharray: 8 4;
   }
   .chart-title {
     @apply text-2xl font-bold;
