@@ -8,7 +8,8 @@
       'https://raw.githubusercontent.com/rwightman/pytorch-image-models/master/results/results-imagenet.csv',
       (row: any) =>
         ({
-          ...row,
+          model: row.model,
+          interpolation: row.interpolation,
           top1: +row.top1,
           top1_err: +row.top1_err,
           top5: +row.top5,
@@ -21,8 +22,17 @@
     console.log(data[0]);
     return data;
   }
-
   const data = getData();
+
+  function dataContent(row: TData) {
+    return [
+      `img sz: ${row.img_size}`,
+      `Top 1: ${row.top1}`,
+      `Top 5: ${row.top5}`,
+      `# params: ${row.param_count}`,
+      `Cropt %: ${row.cropt_pct}`
+    ];
+  }
 </script>
 
 <div class="container mx-auto mt-4 rounded-lg bg-slate-50 p-8 ">
@@ -36,6 +46,8 @@
         data={data.slice(0, 25)}
         xValue={(row) => row.param_count}
         yValue={(row) => row.top1}
+        dataTitle={(row) => row.model}
+        {dataContent}
         margin={{
           top: 50,
           right: 20,

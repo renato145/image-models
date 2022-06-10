@@ -1,11 +1,14 @@
 <script lang="ts">
   import { select, scaleLinear, extent, axisBottom, axisLeft } from 'd3';
+  import type { TData } from 'src/types';
   import ChartContainer from './ChartContainer.svelte';
   import Point from './Point.svelte';
 
-  export let data: any,
-    xValue: (any) => number,
-    yValue: (any) => number,
+  export let data: TData[],
+    xValue: (d: TData) => number,
+    yValue: (d: TData) => number,
+    dataTitle: (d: TData) => string,
+    dataContent: (d: TData) => string[],
     margin: { top: number; right: number; left: number; bottom: number },
     pointsRadius = 10,
     pointHoverRadius = 20,
@@ -33,7 +36,12 @@
   $: yAxis = axisLeft(y).ticks(nTicksY);
   $: select(yAxisNode).call(yAxis).selectAll('text').attr('class', 'tick-labels');
 
-  $: coords = data.map((row) => [x(xValue(row)), y(yValue(row))]);
+  $: pointsData = data.map((row) => ({
+    x: x(xValue(row)),
+    y: y(yValue(row)),
+    dialogTitle: dataTitle(row),
+    dialogContent: dataContent(row),
+  }));
 </script>
 
 <ChartContainer bind:width bind:height let:mouseX let:mouseY>
@@ -59,8 +67,8 @@
     {/if}
   </svg>
   <!-- Scatter -->
-  {#each coords as [x, y]}
-    <Point {x} {y} r={pointsRadius} hoverR={pointHoverRadius} />
+  {#each pointsData as d}
+    <Point {...d} r={pointsRadius} hoverR={pointHoverRadius} />
   {/each}
 </ChartContainer>
 

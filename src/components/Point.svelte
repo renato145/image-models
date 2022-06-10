@@ -3,7 +3,9 @@
     y: number,
     r: number,
     hoverR: number,
-    dialogPadding = 5;
+    dialogPadding = 5,
+    dialogTitle = '',
+    dialogContent: string[] = [];
   $: dialogYPosition = r * 2 + dialogPadding;
   let highlight = false,
     locked = false;
@@ -27,7 +29,9 @@
     style:top={`${y + dialogYPosition}px`}
     style:left={`${x + r}px`}
   >
-    <p>outside</p>
-    <p>({x.toFixed()},{y.toFixed()}) ({x.toFixed()},{y.toFixed()}) {locked}</p>
+    <p class="font-semibold">{dialogTitle}</p>
+    {#each dialogContent as s}
+      <p class="text-sm">{s}</p>
+    {/each}
   </div>
 {/if}
