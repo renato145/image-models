@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { clickOutside } from '../utils/clickOutside';
+
   export let radius: number,
     position: [number, number] | undefined,
     pointClass = '',
@@ -28,6 +30,8 @@
     style:height={`${radius * 2}px`}
     style:width={`${radius * 2}px`}
     on:click={() => (locked = !locked)}
+    use:clickOutside
+    on:outclick={() => (locked = false)}
   >
     <div
       class="absolute -translate-x-1/2 bg-green-400 p-2"
