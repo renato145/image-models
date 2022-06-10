@@ -36,11 +36,14 @@
         xValue={(row) => row.param_count}
         yValue={(row) => row.top1}
         margin={{
-          top: 20,
+          top: 50,
           right: 20,
-          left: 50,
-          bottom: 50
+          left: 80,
+          bottom: 55
         }}
+        title="Image models"
+        xLabel="Param count"
+        yLabel="Top 1"
       />
     {/await}
   </div>
