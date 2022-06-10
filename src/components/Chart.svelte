@@ -1,12 +1,13 @@
 <script lang="ts">
   import { select, scaleLinear, extent, axisBottom, axisLeft, quadtree } from 'd3';
+  import ChartContainer from './ChartContainer.svelte';
 
   export let data: any,
     xValue: (any) => number,
     yValue: (any) => number,
     margin: { top: number; right: number; left: number; bottom: number };
   const nTicksY = 5;
-  let width, height, xAxisNode, yAxisNode, found;
+  let width, height, xAxisNode, yAxisNode;
 
   $: innerSize = {
     width: width - margin.left - margin.right,
@@ -34,15 +35,14 @@
     ])
     .addAll(coords);
 
-  let mousepos;
-  function findItem(e: MouseEvent) {
-    // check https://github.com/d3/d3-selection/blob/main/src/pointer.js
-    found = finder.find(e['layerX'], e['layerY']);
+  let found;
+  function findItem(x: number, y: number) {
+    found = finder.find(x, y, 20);
   }
 </script>
 
-<div bind:clientWidth={width} bind:clientHeight={height}>
-  <svg class="min-h-[300px] w-full bg-gray-300" on:mousemove={findItem}>
+<ChartContainer bind:width bind:height let:mouseX let:mouseY>
+  <svg class="min-h-[300px] w-full bg-gray-300" on:mousemove={() => findItem(mouseX, mouseY)}>
     {#if width && height}
       <rect x={margin.left} y={margin.top} width={innerSize.width} height={innerSize.height} class="fill-white" />
       <g bind:this={xAxisNode} transform={`translate(0,${height - margin.bottom})`} />
@@ -56,12 +56,13 @@
       {#each coords as [x, y]}
         <circle cx={x} cy={y} r={10} class="fill-blue-800/50" />
       {/each}
+      <!-- <circle cx={mouseX} cy={mouseY} r={10} class="fill-emerald-800/75" /> -->
       {#if found}
         <circle cx={found[0]} cy={found[1]} r={20} class="fill-red-800/50" />
       {/if}
     {/if}
   </svg>
-</div>
+</ChartContainer>
 
 <style>
   :global(.tick-labels) {
