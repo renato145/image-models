@@ -1,6 +1,7 @@
 <script lang="ts">
   import { csv } from 'd3';
   import Scatter from '../components/Chart.svelte';
+  import ShowSelected from '../components/ShowSelected.svelte';
   import type { TData } from '../types';
 
   async function getData() {
@@ -60,6 +61,7 @@
         pointsRadius={5}
         pointHoverRadius={8}
       />
+      <ShowSelected {data} />
     {/await}
   </div>
 </div>
