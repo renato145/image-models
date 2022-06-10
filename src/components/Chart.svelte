@@ -45,7 +45,7 @@
 </script>
 
 <ChartContainer bind:width bind:height let:mouseX let:mouseY>
-  <svg class="min-h-[300px] w-full bg-gray-300">
+  <svg class="min-h-[400px] w-full bg-gray-300">
     {#if width && height}
       <!-- Axes -->
       <rect
