@@ -32,7 +32,7 @@
       <p>...loading data</p>
     {:then data}
       <Scatter
-        data={data.slice(0,25)}
+        data={data.slice(0, 25)}
         xValue={(row) => row.param_count}
         yValue={(row) => row.top1}
         margin={{

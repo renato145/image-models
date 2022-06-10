@@ -42,9 +42,9 @@
     ])
     .addAll(coords);
 
-  let found;
+  let highlightPosition: [number, number] | undefined;
   function findItem(x: number, y: number) {
-    found = finder.find(x, y, pointHoverRadius);
+    highlightPosition = finder.find(x, y, pointHoverRadius);
   }
 </script>
 
@@ -75,10 +75,8 @@
       <!-- <circle cx={mouseX} cy={mouseY} r={10} class="fill-emerald-800/75" /> -->
     {/if}
   </svg>
-  {#if found}
-    <Highlight x={found[0]} y={found[1]} radius={pointHoverRadius} pointClass="bg-blue-700" />
-  {/if}
-  <Highlight x={200} y={120} radius={pointHoverRadius} pointClass="bg-blue-700" />
+  <Highlight position={highlightPosition} radius={pointHoverRadius} pointClass="bg-blue-700" />
+  <Highlight position={[200, 120]} radius={pointHoverRadius} pointClass="bg-blue-700" />
 </ChartContainer>
 
 <style>
