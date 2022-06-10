@@ -48,15 +48,29 @@
   <svg class="min-h-[300px] w-full bg-gray-300">
     {#if width && height}
       <!-- Axes -->
-      <rect x={margin.left} y={margin.top} width={innerSize.width} height={innerSize.height} class="fill-white" />
+      <rect
+        x={margin.left}
+        y={margin.top}
+        width={innerSize.width}
+        height={innerSize.height}
+        class="fill-white"
+      />
       <g bind:this={xAxisNode} transform={`translate(0,${height - margin.bottom})`} />
       <g bind:this={yAxisNode} transform={`translate(${margin.left},0)`} />
       <!-- Grid -->
       {#each x.ticks() as tick}
-        <line transform={`translate(${x(tick)},${margin.top})`} y2={innerSize.height} class="grid-lines" />
+        <line
+          transform={`translate(${x(tick)},${margin.top})`}
+          y2={innerSize.height}
+          class="grid-lines"
+        />
       {/each}
       {#each y.ticks(nTicksY) as tick}
-        <line transform={`translate(${margin.left},${y(tick)})`} x2={innerSize.width} class="grid-lines" />
+        <line
+          transform={`translate(${margin.left},${y(tick)})`}
+          x2={innerSize.width}
+          class="grid-lines"
+        />
       {/each}
       <!-- Labels -->
       <text x={width / 2} y={15} dominant-baseline="hanging" class="chart-title">{title}</text>
