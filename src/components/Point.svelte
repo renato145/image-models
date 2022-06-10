@@ -25,7 +25,7 @@
 
 {#if highlight}
   <div
-    class="absolute -translate-x-1/2 bg-white/70 ring-2 ring-slate-300 rounded shadow p-2 z-10 backdrop-blur-sm"
+    class="absolute z-10 -translate-x-1/2 rounded bg-white/70 p-2 shadow ring-2 ring-slate-300 backdrop-blur-sm"
     style:top={`${y + dialogYPosition}px`}
     style:left={`${x + r}px`}
   >

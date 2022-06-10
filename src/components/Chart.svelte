@@ -40,7 +40,7 @@
     x: x(xValue(row)),
     y: y(yValue(row)),
     dialogTitle: dataTitle(row),
-    dialogContent: dataContent(row),
+    dialogContent: dataContent(row)
   }));
 </script>
 
