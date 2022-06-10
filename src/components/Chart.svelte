@@ -83,8 +83,14 @@
     {/if}
   </svg>
   <!-- Scatter -->
-  {#each pointsData as d}
-    <Point {...d} r={pointsRadius} hoveredR={pointHoverRadius} searchR={pointHoverRadius * 2} />
+  {#each pointsData as d, idx}
+    <Point
+      {idx}
+      {...d}
+      r={pointsRadius}
+      hoveredR={pointHoverRadius}
+      searchR={pointHoverRadius * 2}
+    />
   {/each}
 </ChartContainer>
 

@@ -1,5 +1,8 @@
 <script lang="ts">
-  export let x: number,
+  import { selectedIdxs } from '../store';
+
+  export let idx: number,
+    x: number,
     y: number,
     r: number,
     hoveredR: number,
@@ -10,6 +13,20 @@
   $: dialogYPosition = r * 2 + dialogPadding;
   let highlight = false,
     locked = false;
+
+  $: selectedIdxs.update((d) => {
+    const i = d.indexOf(idx);
+    if (highlight) {
+      if (i === -1) {
+        d.push(idx);
+      }
+    } else {
+      if (i !== -1) {
+        d.splice(i, 1);
+      }
+    }
+    return d;
+  });
 </script>
 
 <div
