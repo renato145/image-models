@@ -3,12 +3,15 @@
     y: number,
     r: number,
     hoverR: number,
+    hoverPoint: [number, number],
     dialogPadding = 5,
     dialogTitle = '',
     dialogContent: string[] = [];
   $: dialogYPosition = r * 2 + dialogPadding;
-  let highlight = false,
-    locked = false;
+  $: hovered = hoverPoint !== undefined && hoverPoint[0] === x && hoverPoint[1] === y;
+  $: highlight = locked || hovered;
+  let locked = false;
+  // on:mouseenter={() => (highlight = true)} on:mouseleave={() => (highlight = locked || false)}
 </script>
 
 <div
@@ -19,8 +22,6 @@
   style:width={`${(highlight ? hoverR : r) * 2}px`}
   style:opacity={highlight ? 1 : 0.5}
   on:click={() => (locked = !locked)}
-  on:mouseenter={() => (highlight = true)}
-  on:mouseleave={() => (highlight = locked || false)}
 />
 
 {#if highlight}

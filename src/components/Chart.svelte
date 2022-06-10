@@ -44,7 +44,15 @@
   }));
 </script>
 
-<ChartContainer bind:width bind:height let:mouseX let:mouseY>
+<ChartContainer
+  coords={pointsData.map((d) => [d.x, d.y])}
+  searchRange={pointHoverRadius + 10}
+  bind:width
+  bind:height
+  let:mouseX
+  let:mouseY
+  let:found
+>
   <svg class="min-h-[300px] w-full bg-gray-300">
     {#if width && height}
       <!-- Axes -->
@@ -84,7 +92,7 @@
   </svg>
   <!-- Scatter -->
   {#each pointsData as d}
-    <Point {...d} r={pointsRadius} hoverR={pointHoverRadius} />
+    <Point {...d} r={pointsRadius} hoverR={pointHoverRadius} hoverPoint={found} />
   {/each}
 </ChartContainer>
 
