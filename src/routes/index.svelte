@@ -20,7 +20,6 @@
           cropt_pct: +row.cropt_pct
         } as TData)
     );
-    console.log(data[0]);
     return data;
   }
   const data = getData();
