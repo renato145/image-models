@@ -12,22 +12,20 @@
     dialogTitle = '',
     dialogContent: string[] = [];
   $: dialogYPosition = r * 2 + dialogPadding;
-  let highlight = false,
-    locked = false;
+  $: locked = $selectedIdxs.indexOf(idx) !== -1;
+  let highlight = false;
 
-  $: selectedIdxs.update((d) => {
-    const i = d.indexOf(idx);
-    if (highlight) {
+  function toogleLocked() {
+    selectedIdxs.update((d) => {
+      const i = d.indexOf(idx);
       if (i === -1) {
         d.push(idx);
-      }
-    } else {
-      if (i !== -1) {
+      } else {
         d.splice(i, 1);
       }
-    }
-    return d;
-  });
+      return d;
+    });
+  }
 </script>
 
 {#if show}
@@ -35,9 +33,9 @@
     class="absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-700 border-red-700"
     style:top={`${y}px`}
     style:left={`${x}px`}
-    style:height={`${(highlight ? hoveredR : r) * 2}px`}
-    style:width={`${(highlight ? hoveredR : r) * 2}px`}
-    style:opacity={highlight ? 1 : 0.5}
+    style:height={`${(locked || highlight ? hoveredR : r) * 2}px`}
+    style:width={`${(locked || highlight ? hoveredR : r) * 2}px`}
+    style:opacity={locked || highlight ? 1 : 0.5}
     style:border-width={locked ? '2px' : '0px'}
   />
   <div
@@ -46,12 +44,12 @@
     style:left={`${x}px`}
     style:height={`${searchR * 2}px`}
     style:width={`${searchR * 2}px`}
-    on:click={() => (locked = !locked)}
+    on:click={() => toogleLocked()}
     on:mouseenter={() => (highlight = true)}
-    on:mouseleave={() => (highlight = locked || false)}
+    on:mouseleave={() => (highlight = false)}
   />
 
-  {#if highlight}
+  {#if locked || highlight}
     <div
       class="absolute z-10 -translate-x-1/2 rounded bg-white/70 p-2 shadow ring-2 ring-slate-300 backdrop-blur-sm"
       style:top={`${y + dialogYPosition}px`}
