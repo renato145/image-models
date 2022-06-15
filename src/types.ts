@@ -1,4 +1,5 @@
 export interface TData {
+  idx: number;
   model: string;
   top1: number;
   top1_err: number;

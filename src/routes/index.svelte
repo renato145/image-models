@@ -4,21 +4,21 @@
   import ShowSelected from '../components/ShowSelected.svelte';
   import type { TData } from '../types';
 
-  async function getData() {
+  async function getData(): Promise<TData[]> {
     const data = await csv(
       'https://raw.githubusercontent.com/rwightman/pytorch-image-models/master/results/results-imagenet.csv',
-      (row: any) =>
-        ({
-          model: row.model,
-          interpolation: row.interpolation,
-          top1: +row.top1,
-          top1_err: +row.top1_err,
-          top5: +row.top5,
-          top5_err: +row.top5_err,
-          param_count: +row.param_count,
-          img_size: +row.img_size,
-          cropt_pct: +row.cropt_pct
-        } as TData)
+      (row: any, idx) => ({
+        idx,
+        model: row.model,
+        interpolation: row.interpolation,
+        top1: +row.top1,
+        top1_err: +row.top1_err,
+        top5: +row.top5,
+        top5_err: +row.top5_err,
+        param_count: +row.param_count,
+        img_size: +row.img_size,
+        cropt_pct: +row.cropt_pct
+      })
     );
     return data;
   }

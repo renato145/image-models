@@ -47,12 +47,23 @@
   $: yAxis = axisLeft(y).ticks(nTicksY);
   $: select(yAxisNode).call(yAxis).selectAll('text').attr('class', 'tick-labels');
 
-  $: pointsData = data.map((row) => ({
-    x: x(xValue(row)),
-    y: y(yValue(row)),
-    dialogTitle: dataTitle(row),
-    dialogContent: dataContent(row)
-  }));
+  $: pointsData = data.map((row) => {
+    const x_ = x(xValue(row));
+    const y_ = y(yValue(row));
+    const show =
+      x_ >= margin.left &&
+      x_ <= width - margin.right &&
+      y_ >= margin.top &&
+      y_ <= height - margin.bottom;
+    return {
+      idx: row.idx,
+      x: x_,
+      y: y_,
+      show,
+      dialogTitle: dataTitle(row),
+      dialogContent: dataContent(row)
+    };
+  });
 
   // Zoom
   function zoomed({ transform }: { transform: ZoomTransform }) {
@@ -109,14 +120,8 @@
     {/if}
   </svg>
   <!-- Scatter -->
-  {#each pointsData as d, idx}
-    <Point
-      {idx}
-      {...d}
-      r={pointsRadius}
-      hoveredR={pointHoverRadius}
-      searchR={pointHoverRadius * 2}
-    />
+  {#each pointsData as d}
+    <Point {...d} r={pointsRadius} hoveredR={pointHoverRadius} searchR={pointHoverRadius * 2} />
   {/each}
 </ChartContainer>
 
