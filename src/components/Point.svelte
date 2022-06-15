@@ -30,7 +30,7 @@
 
 {#if show}
   <div
-    class="absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-700 border-red-700"
+    class="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border-red-700 bg-blue-700"
     style:top={`${y}px`}
     style:left={`${x}px`}
     style:height={`${(locked || highlight ? hoveredR : r) * 2}px`}
