@@ -69,7 +69,7 @@
   function zoomed({ transform }: { transform: ZoomTransform }) {
     tfm = transform;
   }
-  const zoomPad = 100;
+  const zoomPad = 200;
   $: zoomFn = zoom()
     .translateExtent([
       [-zoomPad, -zoomPad],
@@ -78,6 +78,10 @@
     .scaleExtent([0.8, 5])
     .on('zoom', zoomed);
   $: select(svgRectNode).call(zoomFn);
+
+  function resetZoom() {
+    select(svgRectNode).transition().duration(750).call(zoomFn.transform, zoomIdentity);
+  }
 </script>
 
 <ChartContainer bind:width bind:height let:mouseX let:mouseY>
@@ -123,6 +127,7 @@
   {#each pointsData as d}
     <Point {...d} r={pointsRadius} hoveredR={pointHoverRadius} searchR={pointHoverRadius * 2} />
   {/each}
+  <button class="btn" on:click={resetZoom}>reset zoom</button>
 </ChartContainer>
 
 <style>

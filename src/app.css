@@ -24,7 +24,7 @@
 }
 
 @layer components {
-  btn {
+  .btn {
     @apply rounded bg-blue-600 px-2 py-1 text-white transition duration-150 hover:bg-blue-400 focus:outline-none focus:ring active:bg-blue-800;
   }
 }
