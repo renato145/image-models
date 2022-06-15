@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { select, scaleLinear, extent, axisBottom, axisLeft } from 'd3';
+  import { select, scaleLinear, extent, axisBottom, axisLeft, zoom, zoomIdentity } from 'd3';
+  import type { ZoomTransform } from 'd3';
   import type { TData } from 'src/types';
   import ChartContainer from './ChartContainer.svelte';
   import Point from './Point.svelte';
@@ -17,22 +18,32 @@
     yLabel = 'Y label',
     labelsOffset = 12;
   const nTicksY = 5;
-  let width, height, xAxisNode, yAxisNode;
+  let width,
+    height,
+    svgRectNode,
+    xAxisNode,
+    yAxisNode,
+    tfm = zoomIdentity;
 
   $: innerSize = {
     width: width - margin.left - margin.right,
     height: height - margin.top - margin.bottom
   };
 
-  $: x = scaleLinear()
-    .domain(extent(data, xValue))
-    .range([margin.left, width - margin.right]);
+  $: x = tfm.rescaleX(
+    scaleLinear()
+      .domain(extent(data, xValue))
+      .range([margin.left, width - margin.right])
+  );
+
   $: xAxis = axisBottom(x);
   $: select(xAxisNode).call(xAxis).selectAll('text').attr('class', 'tick-labels');
 
-  $: y = scaleLinear()
-    .domain(extent(data, yValue))
-    .range([height - margin.bottom, margin.top]);
+  $: y = tfm.rescaleY(
+    scaleLinear()
+      .domain(extent(data, yValue))
+      .range([height - margin.bottom, margin.top])
+  );
   $: yAxis = axisLeft(y).ticks(nTicksY);
   $: select(yAxisNode).call(yAxis).selectAll('text').attr('class', 'tick-labels');
 
@@ -42,6 +53,20 @@
     dialogTitle: dataTitle(row),
     dialogContent: dataContent(row)
   }));
+
+  // Zoom
+  function zoomed({ transform }: { transform: ZoomTransform }) {
+    tfm = transform;
+  }
+  const zoomPad = 100;
+  $: zoomFn = zoom()
+    .translateExtent([
+      [-zoomPad, -zoomPad],
+      [width + zoomPad, height + zoomPad]
+    ])
+    .scaleExtent([0.8, 5])
+    .on('zoom', zoomed);
+  $: select(svgRectNode).call(zoomFn);
 </script>
 
 <ChartContainer bind:width bind:height let:mouseX let:mouseY>
@@ -54,6 +79,7 @@
         width={innerSize.width}
         height={innerSize.height}
         class="fill-white"
+        bind:this={svgRectNode}
       />
       <g bind:this={xAxisNode} transform={`translate(0,${height - margin.bottom})`} />
       <g bind:this={yAxisNode} transform={`translate(${margin.left},0)`} />
