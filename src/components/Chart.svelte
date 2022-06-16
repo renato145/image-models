@@ -29,20 +29,22 @@
     width: width - margin.left - margin.right,
     height: height - margin.top - margin.bottom
   };
+  $: chartLimits = {
+    x0: margin.left,
+    x1: width - margin.right,
+    y0: margin.top,
+    y1: height - margin.bottom
+  };
 
   $: x = tfm.rescaleX(
-    scaleLinear()
-      .domain(extent(data, xValue))
-      .range([margin.left, width - margin.right])
+    scaleLinear().domain(extent(data, xValue)).range([chartLimits.x0, chartLimits.x1])
   );
 
   $: xAxis = axisBottom(x);
   $: select(xAxisNode).call(xAxis).selectAll('text').attr('class', 'tick-labels');
 
   $: y = tfm.rescaleY(
-    scaleLinear()
-      .domain(extent(data, yValue))
-      .range([height - margin.bottom, margin.top])
+    scaleLinear().domain(extent(data, yValue)).range([chartLimits.y1, chartLimits.y0])
   );
   $: yAxis = axisLeft(y).ticks(nTicksY);
   $: select(yAxisNode).call(yAxis).selectAll('text').attr('class', 'tick-labels');
@@ -51,10 +53,7 @@
     const x_ = x(xValue(row));
     const y_ = y(yValue(row));
     const show =
-      x_ >= margin.left &&
-      x_ <= width - margin.right &&
-      y_ >= margin.top &&
-      y_ <= height - margin.bottom;
+      x_ >= chartLimits.x0 && x_ <= chartLimits.x1 && y_ >= chartLimits.y0 && y_ <= chartLimits.y1;
     return {
       idx: row.idx,
       x: x_,
@@ -125,7 +124,13 @@
   </svg>
   <!-- Scatter -->
   {#each pointsData as d}
-    <Point {...d} r={pointsRadius} hoveredR={pointHoverRadius} searchR={pointHoverRadius * 2} />
+    <Point
+      {...d}
+      {chartLimits}
+      r={pointsRadius}
+      hoveredR={pointHoverRadius}
+      searchR={pointHoverRadius * 2}
+    />
   {/each}
   <button class="btn" on:click={resetZoom}>reset zoom</button>
 </ChartContainer>

@@ -6,12 +6,18 @@
     x: number,
     y: number,
     r: number,
+    chartLimits: {
+      x0: number;
+      x1: number;
+      y0: number;
+      y1: number;
+    },
     hoveredR: number,
     searchR: number,
     dialogPadding = 5,
     dialogTitle = '',
     dialogContent: string[] = [];
-  $: dialogYPosition = r * 2 + dialogPadding;
+
   $: locked = $selectedIdxs.indexOf(idx) !== -1;
   let highlight = false;
 
@@ -26,11 +32,29 @@
       return d;
     });
   }
+
+  let dialogWidth = 0,
+    dialogHeight = 0,
+    dialogXPos = 0,
+    dialogYPos = 0;
+  $: {
+    dialogXPos = Math.min(
+      Math.max(chartLimits.x0 + dialogWidth / 2, x + r),
+      chartLimits.x1 - dialogWidth / 2
+    );
+  }
+  $: {
+    const pad = r * 2 + dialogPadding;
+    dialogYPos = y + pad;
+    if (dialogYPos + dialogHeight > chartLimits.y1) {
+      dialogYPos = y - dialogHeight - pad;
+    }
+  }
 </script>
 
 {#if show}
   <div
-    class="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border-red-700 bg-blue-700"
+    class="absolute z-10 -translate-x-1/2 -translate-y-1/2 rounded-full border-red-700 bg-blue-700"
     style:top={`${y}px`}
     style:left={`${x}px`}
     style:height={`${(locked || highlight ? hoveredR : r) * 2}px`}
@@ -39,7 +63,7 @@
     style:border-width={locked ? '2px' : '0px'}
   />
   <div
-    class="absolute -translate-x-1/2 -translate-y-1/2 rounded-full"
+    class="absolute z-30 -translate-x-1/2 -translate-y-1/2 rounded-full"
     style:top={`${y}px`}
     style:left={`${x}px`}
     style:height={`${searchR * 2}px`}
@@ -51,9 +75,11 @@
 
   {#if locked || highlight}
     <div
-      class="absolute z-10 -translate-x-1/2 rounded bg-white/70 p-2 shadow ring-2 ring-slate-300 backdrop-blur-sm"
-      style:top={`${y + dialogYPosition}px`}
-      style:left={`${x + r}px`}
+      class="absolute z-20 -translate-x-1/2 rounded bg-white/70 p-2 shadow ring-2 ring-slate-300 backdrop-blur-sm"
+      style:top={`${dialogYPos}px`}
+      style:left={`${dialogXPos}px`}
+      bind:clientWidth={dialogWidth}
+      bind:clientHeight={dialogHeight}
     >
       <p class="font-semibold">{dialogTitle}</p>
       {#each dialogContent as s}
