@@ -132,8 +132,8 @@
       searchR={pointHoverRadius * 2}
     />
   {/each}
-  <button class="btn" on:click={resetZoom}>reset zoom</button>
 </ChartContainer>
+<button class="btn" on:click={resetZoom}>reset zoom</button>
 
 <style>
   :global(.tick-labels) {
