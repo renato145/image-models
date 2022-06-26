@@ -4,12 +4,15 @@
   let mouseX, mouseY;
 
   // check d3 way https://github.com/d3/d3-selection/blob/main/src/pointer.js
-  function handleMouseMove(e: MouseEvent) {
-    mouseX = e['layerX'];
-    mouseY = e['layerY'];
-  }
+  // function handleMouseMove(e: MouseEvent) {
+  //   mouseX = e['layerX'];
+  //   mouseY = e['layerY'];
+  // }
 </script>
 
-<div bind:clientWidth={width} bind:clientHeight={height} on:mousemove={handleMouseMove}>
+<!-- <div bind:clientWidth={width} bind:clientHeight={height} on:mousemove={handleMouseMove}>
   <slot {mouseX} {mouseY} />
+</div> -->
+<div bind:clientWidth={width} bind:clientHeight={height}>
+  <slot />
 </div>

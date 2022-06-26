@@ -83,7 +83,7 @@
   }
 </script>
 
-<ChartContainer bind:width bind:height let:mouseX let:mouseY>
+<ChartContainer bind:width bind:height>
   <svg class="min-h-[400px] w-full bg-gray-300">
     {#if width && height}
       <!-- Axes -->
