@@ -16,10 +16,10 @@
     title = 'Title',
     xLabel = 'X label',
     yLabel = 'Y label',
+    height = 400,
     labelsOffset = 12;
   const nTicksY = 5;
   let width,
-    height,
     svgRectNode,
     xAxisNode,
     yAxisNode,
@@ -83,8 +83,8 @@
   }
 </script>
 
-<ChartContainer bind:width bind:height>
-  <svg class="min-h-[400px] w-full bg-gray-300">
+<ChartContainer class="" bind:width>
+  <svg class="bg-gray-300" {width} {height}>
     {#if width && height}
       <!-- Axes -->
       <rect

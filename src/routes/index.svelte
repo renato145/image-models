@@ -35,10 +35,10 @@
   }
 </script>
 
-<div class="container mx-auto mt-4 rounded-lg bg-slate-50 p-8 ">
-  <h1>Image models</h1>
+<div class="flex flex-col container mx-auto mt-4 rounded-lg bg-slate-50 p-8">
+  <h1>The best vision models for fine-tuning</h1>
 
-  <div class="mt-4">
+  <div class="mt-8">
     {#await data}
       <p>...loading data</p>
     {:then data}
@@ -57,6 +57,7 @@
         title="Image models"
         xLabel="Param count"
         yLabel="Top 1"
+        height={400}
         pointsRadius={5}
         pointHoverRadius={8}
       />
