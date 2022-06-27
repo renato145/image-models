@@ -29,8 +29,8 @@
     xLabel: 'Fit time',
     yLabel: 'Error rate',
     height: 400,
-    pointsRadius: 8,
-    pointHoverRadius: 12,
+    pointsRadius: 6,
+    pointHoverRadius: 10,
     xOffset: 5,
     yOffset: 0.01
   };
