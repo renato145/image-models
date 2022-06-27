@@ -1,8 +1,7 @@
 <script lang="ts">
   import { getData } from '../utils/getData';
-  import Scatter from '../components/Scatter.svelte';
-  import ShowSelected from '../components/ShowSelected.svelte';
   import type { TData } from '../types';
+  import Charts from '../components/Charts.svelte';
 
   const data = getData();
   function dataContent(row: TData) {
@@ -44,19 +43,7 @@
     {#await data}
       <p>...loading data</p>
     {:then data}
-      <div class="space-y-2">
-        <Scatter
-          data={data.filter((row) => row.dataset === 'pets')}
-          title="Oxford IIT-Pet Dataset"
-          {...chartConfigs}
-        />
-        <Scatter
-          data={data.filter((row) => row.dataset === 'planet')}
-          title="Kaggle Planet Dataset"
-          {...chartConfigs}
-        />
-      </div>
-      <ShowSelected {data} />
+      <Charts {data} {chartConfigs} />
     {/await}
   </div>
 </div>

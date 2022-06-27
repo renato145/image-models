@@ -64,7 +64,7 @@
 
 {#if show}
   <div
-    class="absolute z-10 -translate-x-1/2 -translate-y-1/2 rounded-full red"
+    class="red absolute z-10 -translate-x-1/2 -translate-y-1/2 rounded-full"
     style:top={`${y}px`}
     style:left={`${x}px`}
     style:height={`${(highlighted ? hoveredR : r) * 2}px`}

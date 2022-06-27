@@ -10,7 +10,7 @@
     schemePaired,
     scaleOrdinal
   } from 'd3';
-  import type { ZoomTransform } from 'd3';
+  import type { ZoomTransform, ScaleOrdinal } from 'd3';
   import type { TData } from 'src/types';
   import ChartContainer from './ChartContainer.svelte';
   import Point from './Point.svelte';
@@ -19,6 +19,7 @@
     xValue: (d: TData) => number,
     yValue: (d: TData) => number,
     colorValue: (d: TData) => string,
+    colorScale: ScaleOrdinal<string, string>,
     dataTitle: (d: TData) => string,
     dataContent: (d: TData) => string[],
     margin: { top: number; right: number; left: number; bottom: number },
@@ -68,8 +69,6 @@
   $: yAxis = axisLeft(y).ticks(nTicksY);
   $: select(yAxisNode).call(yAxis).selectAll('text').attr('class', 'tick-labels');
 
-  $: color = scaleOrdinal(schemePaired).domain(data.map(colorValue));
-
   $: pointsData = data.map((row) => {
     const x_ = x(xValue(row));
     const y_ = y(yValue(row));
@@ -80,7 +79,7 @@
       x: x_,
       y: y_,
       show,
-      color: color(colorValue(row)),
+      color: colorScale(colorValue(row)),
       dialogTitle: dataTitle(row),
       dialogContent: dataContent(row)
     };
@@ -106,7 +105,7 @@
 </script>
 
 <div class="flex flex-col">
-  <ChartContainer class="bg-gray-300 rounded-lg" bind:width>
+  <ChartContainer class="rounded-lg bg-gray-300" bind:width>
     <svg {width} {height}>
       {#if width && height}
         <!-- Axes -->
@@ -156,7 +155,7 @@
       />
     {/each}
   </ChartContainer>
-  <button class="btn self-end mr-2 mt-1" on:click={resetZoom}>reset zoom</button>
+  <button class="btn mr-2 mt-1 self-end" on:click={resetZoom}>reset zoom</button>
 </div>
 
 <style>
