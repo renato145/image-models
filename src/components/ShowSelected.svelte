@@ -17,7 +17,7 @@
     <p>Empty selection</p>
   {:else}
     {#each $selectedIdxs as i}
-      <p>{data[i].model}</p>
+      <p>{data[i].model_name}</p>
     {/each}
   {/if}
 </div>

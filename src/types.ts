@@ -1,12 +1,15 @@
 export interface TData {
   idx: number;
-  model: string;
-  top1: number;
-  top1_err: number;
-  top5: number;
-  top5_err: number;
-  param_count: number;
-  img_size: number;
-  cropt_pct: number;
-  interpolation: string;
+  GPU_mem: number;
+  dataset: TDatasets;
+  error_rate: number;
+  fit_time: number;
+  learning_rate: number;
+  family: string;
+  model_name: string;
+  pool: string;
+  train_loss: number;
+  valid_loss: number;
 }
+
+export type TDatasets = 'pets' | 'planet';

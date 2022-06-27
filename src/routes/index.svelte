@@ -1,36 +1,19 @@
 <script lang="ts">
-  import { csv } from 'd3';
+  import { getData } from '../utils/getData';
   import Scatter from '../components/Chart.svelte';
   import ShowSelected from '../components/ShowSelected.svelte';
   import type { TData } from '../types';
 
-  async function getData(): Promise<TData[]> {
-    const data = await csv(
-      'https://raw.githubusercontent.com/rwightman/pytorch-image-models/master/results/results-imagenet.csv',
-      (row: any, idx) => ({
-        idx,
-        model: row.model,
-        interpolation: row.interpolation,
-        top1: +row.top1,
-        top1_err: +row.top1_err,
-        top5: +row.top5,
-        top5_err: +row.top5_err,
-        param_count: +row.param_count,
-        img_size: +row.img_size,
-        cropt_pct: +row.cropt_pct
-      })
-    );
-    return data;
-  }
   const data = getData();
 
   function dataContent(row: TData) {
     return [
-      `img sz: ${row.img_size}`,
-      `Top 1: ${row.top1}`,
-      `Top 5: ${row.top5}`,
-      `# params: ${row.param_count}`,
-      `Cropt %: ${row.cropt_pct}`
+      `Dataset: ${row.dataset}`,
+      `Error rate: ${row.error_rate}`,
+      `Fit time: ${row.fit_time}`,
+      `GPU mem: ${row.GPU_mem}`,
+      `Learning rate: ${row.learning_rate}`,
+      `Pool: ${row.pool}`
     ];
   }
 </script>
@@ -44,9 +27,9 @@
     {:then data}
       <Scatter
         data={data.slice(0, 30)}
-        xValue={(row) => row.param_count}
-        yValue={(row) => row.top1}
-        dataTitle={(row) => row.model}
+        xValue={(row) => row.fit_time}
+        yValue={(row) => row.error_rate}
+        dataTitle={(row) => row.model_name}
         {dataContent}
         margin={{
           top: 50,
