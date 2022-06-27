@@ -60,6 +60,8 @@
         height={400}
         pointsRadius={5}
         pointHoverRadius={8}
+        xOffset={5}
+        yOffset={0.01}
       />
       <ShowSelected {data} />
     {/await}

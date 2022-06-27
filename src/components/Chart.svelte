@@ -17,6 +17,8 @@
     xLabel = 'X label',
     yLabel = 'Y label',
     height = 400,
+    xOffset = 0,
+    yOffset = 0,
     labelsOffset = 12;
   const nTicksY = 5;
   let width,
@@ -36,15 +38,21 @@
     y1: height - margin.bottom
   };
 
+  $: xExtent = extent(data, xValue);
   $: x = tfm.rescaleX(
-    scaleLinear().domain(extent(data, xValue)).range([chartLimits.x0, chartLimits.x1])
+    scaleLinear()
+      .domain([xExtent[0] - xOffset, xExtent[1] + xOffset])
+      .range([chartLimits.x0, chartLimits.x1])
   );
 
   $: xAxis = axisBottom(x);
   $: select(xAxisNode).call(xAxis).selectAll('text').attr('class', 'tick-labels');
 
+  $: yExtent = extent(data, yValue);
   $: y = tfm.rescaleY(
-    scaleLinear().domain(extent(data, yValue)).range([chartLimits.y1, chartLimits.y0])
+    scaleLinear()
+      .domain([yExtent[0] - yOffset, yExtent[1] + yOffset])
+      .range([chartLimits.y1, chartLimits.y0])
   );
   $: yAxis = axisLeft(y).ticks(nTicksY);
   $: select(yAxisNode).call(yAxis).selectAll('text').attr('class', 'tick-labels');
