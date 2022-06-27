@@ -23,7 +23,7 @@
   }
 </script>
 
-<div class="flex flex-wrap space-x-2">
+<div class="flex flex-wrap gap-2">
   {#each data as d}
     <button
       class="btn text-gray-800 font-semibold p-2"

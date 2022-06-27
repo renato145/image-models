@@ -14,7 +14,6 @@
 </script>
 
 <div class="space-y-2">
-  {$selectedFamilies}
   <FamilyFilter {allFamilies} {colorScale} />
   <Scatter
     data={data.filter((row) => row.dataset === 'pets').filter(filterFamily)}
