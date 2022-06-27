@@ -5,7 +5,6 @@
   import type { TData } from '../types';
 
   const data = getData();
-
   function dataContent(row: TData) {
     return [
       `Dataset: ${row.dataset}`,
@@ -16,6 +15,25 @@
       `GPU mem: ${row.GPU_mem}`
     ];
   }
+  const chartConfigs = {
+    xValue: (row) => row.fit_time,
+    yValue: (row) => row.error_rate,
+    dataTitle: (row) => row.model_name,
+    dataContent,
+    margin: {
+      top: 50,
+      right: 20,
+      left: 80,
+      bottom: 55
+    },
+    xLabel: 'Fit time',
+    yLabel: 'Error rate',
+    height: 400,
+    pointsRadius: 5,
+    pointHoverRadius: 8,
+    xOffset: 5,
+    yOffset: 0.01
+  };
 </script>
 
 <div class="container mx-auto mt-4 flex flex-col rounded-lg bg-slate-50 p-8">
@@ -26,25 +44,14 @@
       <p>...loading data</p>
     {:then data}
       <Scatter
-        data={data}
-        xValue={(row) => row.fit_time}
-        yValue={(row) => row.error_rate}
-        dataTitle={(row) => row.model_name}
-        {dataContent}
-        margin={{
-          top: 50,
-          right: 20,
-          left: 80,
-          bottom: 55
-        }}
-        title="Image models"
-        xLabel="Fit time"
-        yLabel="Error rate"
-        height={400}
-        pointsRadius={5}
-        pointHoverRadius={8}
-        xOffset={5}
-        yOffset={0.01}
+        data={data.filter((row) => row.dataset === 'pets')}
+        title="Oxford IIT-Pet Dataset"
+        {...chartConfigs}
+      />
+      <Scatter
+        data={data.filter((row) => row.dataset === 'planet')}
+        title="Kaggle Planet Dataset"
+        {...chartConfigs}
       />
       <ShowSelected {data} />
     {/await}
