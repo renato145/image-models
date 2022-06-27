@@ -26,7 +26,7 @@
       <p>...loading data</p>
     {:then data}
       <Scatter
-        data={data.slice(0, 30)}
+        data={data}
         xValue={(row) => row.fit_time}
         yValue={(row) => row.error_rate}
         dataTitle={(row) => row.model_name}
