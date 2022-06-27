@@ -18,7 +18,7 @@
   }
 </script>
 
-<div class="flex flex-col container mx-auto mt-4 rounded-lg bg-slate-50 p-8">
+<div class="container mx-auto mt-4 flex flex-col rounded-lg bg-slate-50 p-8">
   <h1>The best vision models for fine-tuning</h1>
 
   <div class="mt-8">

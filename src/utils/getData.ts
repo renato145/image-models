@@ -48,6 +48,6 @@ export async function getData(): Promise<TData[]> {
   }));
 
   console.log(data.length);
-  
+
   return data;
 }
