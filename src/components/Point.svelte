@@ -18,19 +18,28 @@
     dialogTitle = '',
     dialogContent: string[] = [];
 
-  $: locked = $selectedIdxs.indexOf(idx) !== -1;
-  let highlight = false;
+  $: highlighted = $selectedIdxs.indexOf(idx) !== -1;
+  let locked = false;
 
-  function toogleLocked() {
+  function highlight_on() {
     selectedIdxs.update((d) => {
-      const i = d.indexOf(idx);
-      if (i === -1) {
+      if (d.indexOf(idx) === -1) {
         d.push(idx);
-      } else {
-        d.splice(i, 1);
       }
       return d;
     });
+  }
+
+  function highlight_off() {
+    if (!locked) {
+      selectedIdxs.update((d) => {
+        const i = d.indexOf(idx);
+        if (i !== -1) {
+          d.splice(i, 1);
+        }
+        return d;
+      });
+    }
   }
 
   let dialogWidth = 0,
@@ -57,10 +66,10 @@
     class="absolute z-10 -translate-x-1/2 -translate-y-1/2 rounded-full border-red-700 bg-blue-700"
     style:top={`${y}px`}
     style:left={`${x}px`}
-    style:height={`${(locked || highlight ? hoveredR : r) * 2}px`}
-    style:width={`${(locked || highlight ? hoveredR : r) * 2}px`}
-    style:opacity={locked || highlight ? 1 : 0.5}
-    style:border-width={locked ? '2px' : '0px'}
+    style:height={`${(highlighted ? hoveredR : r) * 2}px`}
+    style:width={`${(highlighted ? hoveredR : r) * 2}px`}
+    style:opacity={highlighted ? 1 : 0.5}
+    style:border-width={highlighted ? '2px' : '0px'}
   />
   <div
     class="absolute z-30 -translate-x-1/2 -translate-y-1/2 rounded-full"
@@ -68,12 +77,12 @@
     style:left={`${x}px`}
     style:height={`${searchR * 2}px`}
     style:width={`${searchR * 2}px`}
-    on:click={() => toogleLocked()}
-    on:mouseenter={() => (highlight = true)}
-    on:mouseleave={() => (highlight = false)}
+    on:click={() => (locked = !locked)}
+    on:mouseenter={() => highlight_on()}
+    on:mouseleave={() => highlight_off()}
   />
 
-  {#if locked || highlight}
+  {#if highlighted}
     <div
       class="absolute z-20 -translate-x-1/2 rounded bg-white/70 p-2 shadow ring-2 ring-slate-300 backdrop-blur-sm"
       style:top={`${dialogYPos}px`}
