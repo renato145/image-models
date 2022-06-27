@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getData } from '../utils/getData';
-  import Scatter from '../components/Chart.svelte';
+  import Scatter from '../components/Scatter.svelte';
   import ShowSelected from '../components/ShowSelected.svelte';
   import type { TData } from '../types';
 
@@ -31,7 +31,7 @@
     yLabel: 'Error rate',
     height: 400,
     pointsRadius: 8,
-    pointHoverRadius: 10,
+    pointHoverRadius: 12,
     xOffset: 5,
     yOffset: 0.01
   };
