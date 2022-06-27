@@ -6,6 +6,7 @@
     x: number,
     y: number,
     r: number,
+    color: string,
     chartLimits: {
       x0: number;
       x1: number;
@@ -63,13 +64,15 @@
 
 {#if show}
   <div
-    class="absolute z-10 -translate-x-1/2 -translate-y-1/2 rounded-full border-red-700 bg-blue-700"
+    class="absolute z-10 -translate-x-1/2 -translate-y-1/2 rounded-full red"
     style:top={`${y}px`}
     style:left={`${x}px`}
     style:height={`${(highlighted ? hoveredR : r) * 2}px`}
     style:width={`${(highlighted ? hoveredR : r) * 2}px`}
-    style:opacity={highlighted ? 1 : 0.5}
-    style:border-width={highlighted ? '2px' : '0px'}
+    style:background-color={color}
+    style:opacity={highlighted ? 1 : 0.6}
+    style:border-color={highlighted ? 'rgb(220, 38, 38)' : 'black'}
+    style:border-width={highlighted ? '2px' : '1px'}
   />
   <div
     class="absolute z-30 -translate-x-1/2 -translate-y-1/2 rounded-full"

@@ -18,6 +18,7 @@
   const chartConfigs = {
     xValue: (row) => row.fit_time,
     yValue: (row) => row.error_rate,
+    colorValue: (row) => row.family,
     dataTitle: (row) => row.model_name,
     dataContent,
     margin: {
@@ -29,8 +30,8 @@
     xLabel: 'Fit time',
     yLabel: 'Error rate',
     height: 400,
-    pointsRadius: 5,
-    pointHoverRadius: 8,
+    pointsRadius: 8,
+    pointHoverRadius: 10,
     xOffset: 5,
     yOffset: 0.01
   };
@@ -43,16 +44,18 @@
     {#await data}
       <p>...loading data</p>
     {:then data}
-      <Scatter
-        data={data.filter((row) => row.dataset === 'pets')}
-        title="Oxford IIT-Pet Dataset"
-        {...chartConfigs}
-      />
-      <Scatter
-        data={data.filter((row) => row.dataset === 'planet')}
-        title="Kaggle Planet Dataset"
-        {...chartConfigs}
-      />
+      <div class="space-y-2">
+        <Scatter
+          data={data.filter((row) => row.dataset === 'pets')}
+          title="Oxford IIT-Pet Dataset"
+          {...chartConfigs}
+        />
+        <Scatter
+          data={data.filter((row) => row.dataset === 'planet')}
+          title="Kaggle Planet Dataset"
+          {...chartConfigs}
+        />
+      </div>
       <ShowSelected {data} />
     {/await}
   </div>

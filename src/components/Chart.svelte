@@ -1,5 +1,15 @@
 <script lang="ts">
-  import { select, scaleLinear, extent, axisBottom, axisLeft, zoom, zoomIdentity } from 'd3';
+  import {
+    select,
+    scaleLinear,
+    extent,
+    axisBottom,
+    axisLeft,
+    zoom,
+    zoomIdentity,
+    schemePaired,
+    scaleOrdinal
+  } from 'd3';
   import type { ZoomTransform } from 'd3';
   import type { TData } from 'src/types';
   import ChartContainer from './ChartContainer.svelte';
@@ -8,6 +18,7 @@
   export let data: TData[],
     xValue: (d: TData) => number,
     yValue: (d: TData) => number,
+    colorValue: (d: TData) => string,
     dataTitle: (d: TData) => string,
     dataContent: (d: TData) => string[],
     margin: { top: number; right: number; left: number; bottom: number },
@@ -57,6 +68,8 @@
   $: yAxis = axisLeft(y).ticks(nTicksY);
   $: select(yAxisNode).call(yAxis).selectAll('text').attr('class', 'tick-labels');
 
+  $: color = scaleOrdinal(schemePaired).domain(data.map(colorValue));
+
   $: pointsData = data.map((row) => {
     const x_ = x(xValue(row));
     const y_ = y(yValue(row));
@@ -67,6 +80,7 @@
       x: x_,
       y: y_,
       show,
+      color: color(colorValue(row)),
       dialogTitle: dataTitle(row),
       dialogContent: dataContent(row)
     };
@@ -91,57 +105,59 @@
   }
 </script>
 
-<ChartContainer class="" bind:width>
-  <svg class="bg-gray-300" {width} {height}>
-    {#if width && height}
-      <!-- Axes -->
-      <rect
-        x={margin.left}
-        y={margin.top}
-        width={innerSize.width}
-        height={innerSize.height}
-        class="fill-white"
-        bind:this={svgRectNode}
+<div class="flex flex-col">
+  <ChartContainer class="bg-gray-300 rounded-lg" bind:width>
+    <svg {width} {height}>
+      {#if width && height}
+        <!-- Axes -->
+        <rect
+          x={margin.left}
+          y={margin.top}
+          width={innerSize.width}
+          height={innerSize.height}
+          class="fill-white"
+          bind:this={svgRectNode}
+        />
+        <g bind:this={xAxisNode} transform={`translate(0,${height - margin.bottom})`} />
+        <g bind:this={yAxisNode} transform={`translate(${margin.left},0)`} />
+        <!-- Grid -->
+        {#each x.ticks() as tick}
+          <line
+            transform={`translate(${x(tick)},${margin.top})`}
+            y2={innerSize.height}
+            class="grid-lines"
+          />
+        {/each}
+        {#each y.ticks(nTicksY) as tick}
+          <line
+            transform={`translate(${margin.left},${y(tick)})`}
+            x2={innerSize.width}
+            class="grid-lines"
+          />
+        {/each}
+        <!-- Labels -->
+        <text x={width / 2} y={15} dominant-baseline="hanging" class="chart-title">{title}</text>
+        <text x={margin.left + innerSize.width / 2} y={height - labelsOffset} class="ax-label"
+          >{xLabel}</text
+        >
+        <g transform={`translate(${labelsOffset}, ${margin.top + innerSize.height / 2})`}>
+          <text transform="rotate(-90)" class="ax-label" dominant-baseline="hanging">{yLabel}</text>
+        </g>
+      {/if}
+    </svg>
+    <!-- Scatter -->
+    {#each pointsData as d}
+      <Point
+        {...d}
+        {chartLimits}
+        r={pointsRadius}
+        hoveredR={pointHoverRadius}
+        searchR={pointHoverRadius}
       />
-      <g bind:this={xAxisNode} transform={`translate(0,${height - margin.bottom})`} />
-      <g bind:this={yAxisNode} transform={`translate(${margin.left},0)`} />
-      <!-- Grid -->
-      {#each x.ticks() as tick}
-        <line
-          transform={`translate(${x(tick)},${margin.top})`}
-          y2={innerSize.height}
-          class="grid-lines"
-        />
-      {/each}
-      {#each y.ticks(nTicksY) as tick}
-        <line
-          transform={`translate(${margin.left},${y(tick)})`}
-          x2={innerSize.width}
-          class="grid-lines"
-        />
-      {/each}
-      <!-- Labels -->
-      <text x={width / 2} y={15} dominant-baseline="hanging" class="chart-title">{title}</text>
-      <text x={margin.left + innerSize.width / 2} y={height - labelsOffset} class="ax-label"
-        >{xLabel}</text
-      >
-      <g transform={`translate(${labelsOffset}, ${margin.top + innerSize.height / 2})`}>
-        <text transform="rotate(-90)" class="ax-label" dominant-baseline="hanging">{yLabel}</text>
-      </g>
-    {/if}
-  </svg>
-  <!-- Scatter -->
-  {#each pointsData as d}
-    <Point
-      {...d}
-      {chartLimits}
-      r={pointsRadius}
-      hoveredR={pointHoverRadius}
-      searchR={pointHoverRadius * 2}
-    />
-  {/each}
-</ChartContainer>
-<button class="btn" on:click={resetZoom}>reset zoom</button>
+    {/each}
+  </ChartContainer>
+  <button class="btn self-end mr-2 mt-1" on:click={resetZoom}>reset zoom</button>
+</div>
 
 <style>
   :global(.tick-labels) {
