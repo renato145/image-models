@@ -1,15 +1,5 @@
 <script lang="ts">
-  import {
-    select,
-    scaleLinear,
-    extent,
-    axisBottom,
-    axisLeft,
-    zoom,
-    zoomIdentity,
-    schemePaired,
-    scaleOrdinal
-  } from 'd3';
+  import { select, scaleLinear, extent, axisBottom, axisLeft, zoom, zoomIdentity } from 'd3';
   import type { ZoomTransform, ScaleOrdinal } from 'd3';
   import type { TData } from 'src/types';
   import ChartContainer from './ChartContainer.svelte';
