@@ -1,5 +1,6 @@
-export interface TData {
-  idx: number;
+export type TDatasets = 'pets' | 'planet';
+
+export interface TDataRaw {
   GPU_mem: number;
   dataset: TDatasets;
   error_rate: number;
@@ -12,4 +13,13 @@ export interface TData {
   valid_loss: number;
 }
 
-export type TDatasets = 'pets' | 'planet';
+export interface TData {
+  idx: number;
+  dataset: TDatasets;
+  family: string;
+  model_name: string;
+  error_rate: number;
+  fit_time: number;
+  GPU_mem: number;
+  score: number;
+}

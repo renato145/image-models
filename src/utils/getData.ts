@@ -1,18 +1,20 @@
-import { csv, rollup, min } from 'd3';
+import { csv, flatRollup, min } from 'd3';
 import type { TData, TDatasets } from '../types';
 
+const pat = /^([a-z]+?(?:v2)?)(?:\d|_|$)/;
+
 export async function getData(): Promise<TData[]> {
-  const data = await csv(
+  const rawData = await csv(
     'https://gist.githubusercontent.com/jph00/959aaf8695e723246b5e21f3cd5deb02/raw/sweep.csv',
-    (row, idx) => {
+    (row) => {
+      const family = row.model_name.match(pat)[1];
       return {
-        idx,
         GPU_mem: +row.GPU_mem,
         dataset: row.dataset as TDatasets,
         error_rate: +row.error_rate,
         fit_time: +row.fit_time,
         learning_rate: +row.learning_rate,
-		family: 'asdasd',
+        family: family === 'swinv2' ? 'swin' : family,
         model_name: row.model_name,
         pool: row.pool,
         train_loss: +row.train_loss,
@@ -21,26 +23,31 @@ export async function getData(): Promise<TData[]> {
     }
   );
 
-  //   df['family'] = df.model_name.str.extract('^([a-z]+?(?:v2)?)(?:\d|_|$)')
-  // df.loc[df.family=='swinv2', 'family'] = 'swin'
-  // pt_all = df.pivot_table(values=['error_rate','fit_time','GPU_mem'], index=['dataset', 'family', 'model_name'],
-  //                         aggfunc=np.min).reset_index()
-  // pt_all['score'] = pt_all.error_rate*(pt_all.fit_time+80)``
-
-  const d = rollup(
-    data,
-    (d) => ({
-      error_rate: min(d, (d) => d.error_rate),
-      fit_time: min(d, (d) => d.fit_time),
-      GPU_mem: min(d, (d) => d.GPU_mem)
-    }),
+  const data = flatRollup(
+    rawData,
+    (d) => {
+      const error_rate = min(d, (d) => d.error_rate);
+      const fit_time = min(d, (d) => d.fit_time);
+      const GPU_mem = min(d, (d) => d.GPU_mem);
+      return {
+        error_rate,
+        fit_time,
+        GPU_mem,
+        score: error_rate * (fit_time + 80)
+      };
+    },
     (d) => d.dataset,
+    (d) => d.family,
     (d) => d.model_name
-  );
-  //   const dd = Array.from(d)
-  console.log(d);
-  console.log(d.get('pets'));
-  console.log(d.get('pets').get('efficientnetv2_rw_t'));
+  ).map(([dataset, family, model_name, d], idx) => ({
+    idx,
+    dataset,
+    family,
+    model_name,
+    ...d
+  }));
 
+  console.log(data.length);
+  
   return data;
 }

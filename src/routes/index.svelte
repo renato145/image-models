@@ -9,11 +9,11 @@
   function dataContent(row: TData) {
     return [
       `Dataset: ${row.dataset}`,
+      `Family: ${row.family}`,
+      `Score: ${row.score}`,
       `Error rate: ${row.error_rate}`,
       `Fit time: ${row.fit_time}`,
-      `GPU mem: ${row.GPU_mem}`,
-      `Learning rate: ${row.learning_rate}`,
-      `Pool: ${row.pool}`
+      `GPU mem: ${row.GPU_mem}`
     ];
   }
 </script>
@@ -38,8 +38,8 @@
           bottom: 55
         }}
         title="Image models"
-        xLabel="Param count"
-        yLabel="Top 1"
+        xLabel="Fit time"
+        yLabel="Error rate"
         height={400}
         pointsRadius={5}
         pointHoverRadius={8}
