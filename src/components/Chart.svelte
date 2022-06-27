@@ -82,7 +82,7 @@
       [-zoomPad, -zoomPad],
       [width + zoomPad, height + zoomPad]
     ])
-    .scaleExtent([0.8, 5])
+    .scaleExtent([0.5, 20])
     .on('zoom', zoomed);
   $: select(svgRectNode).call(zoomFn);
 
