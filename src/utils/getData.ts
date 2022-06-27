@@ -39,13 +39,13 @@ export async function getData(): Promise<TData[]> {
     (d) => d.dataset,
     (d) => d.family,
     (d) => d.model_name
-  ).map(([dataset, family, model_name, d], idx) => ({
-    idx,
+  ).map(([dataset, family, model_name, d]) => ({
     dataset,
     family,
     model_name,
     ...d
   }));
 
-  return data;
+  const idxMap = new Map([...new Set(data.map((d) => d.model_name))].map((d, i) => [d, i]));
+  return data.map((d) => ({ idx: idxMap.get(d.model_name), ...d }));
 }
